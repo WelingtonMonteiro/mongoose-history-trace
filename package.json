@@ -1,0 +1,40 @@
+{
+  "name": "mongoose-history-trace",
+  "author": {
+    "email": "welington.rmonteiro@gmail.com",
+    "name": "Welington Monteiro"
+  },
+  "version": "1.0.0",
+  "description": "Generate history logs operations mongoose (delete, update, create).",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/WelingtonMonteiro/mongoose-history-trace.git"
+  },
+  "bugs": {
+    "url": "https://github.com/WelingtonMonteiro/mongoose-history-trace.git/issues"
+  },
+  "homepage": "https://github.com/WelingtonMonteiro/mongoose-history-trace.git#readme",
+  "keywords": [
+    "mongoose",
+    "plugin",
+    "history",
+    "logs"
+  ],
+  "license": "MIT",
+  "engines": {
+    "node": "14"
+  },
+  "devDependencies": {
+    "mocha": "*",
+    "should": "*"
+  },
+  "dependencies": {
+    "deep-diff": "^1.0.2",
+    "lodash": "4.17.20",
+    "mongoose": "5.10.0"
+  },
+  "main": "index.js",
+  "scripts": {
+    "test": "NODE_PATH=. mocha test"
+  }
+}
