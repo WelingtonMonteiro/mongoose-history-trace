@@ -25,7 +25,7 @@ const mongooseHistoryTrace = require('mongoose-history-trace')
 
  ...
  
-Schema.plugin(mongooseHistoryTrace, options)
+anSchema.plugin(mongooseHistoryTrace, options)
 ```
 
 In Mongoose models are linked to a connection. In case you wish to use a connection different that the default one to
@@ -36,7 +36,7 @@ Also if you are using more than one connection probably you wish to have one aud
 const mongooseHistoryTrace = require('mongoose-history-trace')
 
 
-Schema.plugin(mongooseHistoryTrace, options)
+anSchema.plugin(mongooseHistoryTrace, options)
 otherShema.plugin(mongooseHistoryTrace, options)
 ```
 Or define plugin in global context mongoose for all schemas. Example:
