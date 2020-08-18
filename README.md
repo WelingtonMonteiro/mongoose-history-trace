@@ -33,7 +33,7 @@ const User = new Schema({
 
 User.plugin(mongooseHistoryTrace, options)
 ```
-This will generate a log from al your changes on this schema.
+This will generate a log from all your changes on this schema.
 
 Or define plugin in global context mongoose for all schemas. Example:
 
@@ -59,6 +59,7 @@ The history trace logs documents have the format:
 {
     "_id": ObjectId,
     "createdAt": ISODate,
+    "user": { Mixed }           // paths defined for you
     "changes": [ 
         {
             "to": String,       // current path modification
@@ -74,8 +75,32 @@ The history trace logs documents have the format:
     "method": String           //name of method call: "updated" | "created" | "deleted"
 }
 ```
+
+
+## Method Static
+#### - addLoggedUser({ object }, [fields]) [required]
+You can define logged user in request.
+
+Initialize the plugin using the `addLoggedUser()` method, before call method mongoose. 
+
+Pass in second parameter, list of string contain names paths on saved. Example: 
+
+```javascript
+const SELECT_PATHS_ON_SAVED = ['name', 'email', 'role']
+
+async function (req, res) {
+    const user = req.user   // GET user on request
+    ...
+    UserModel.addLoggedUser(user, SELECT_PATHS_ON_SAVED)
+    
+}
+```
+**SELECT_PATHS_ON_SAVED** [required] - Second parameter selects the fields of the object q will be saved.
+If nothing is passed, then the log will not be saved.
+
+
 ## Options
-#### - Indexes
+#### - indexes
 You can define indexes in collection, for example:
 
 ```javascript
@@ -83,6 +108,21 @@ const options = {indexes: [{'documentNumber': -1, 'changes.path': 1}]}
 
 User.plugin(mongooseHistory, options)
 ```
+
+#### - isAtuhenticated
+Path 'user' in log history is required, but you can saved logs without path loggedUser. Example:
+
+Value default is `TRUE`
+```javascript
+const options = {isAtuhenticated: false}
+
+User.plugin(mongooseHistory, options)
+```
+So it is not necessary to pass the user logged into the `Model.addLoggedUser()` method. 
+The resulting log will not contain the "user" field.
+
+    "user": { Mixed }  // REMOVED
+
 
 #### - customCollectionName
 You can define name of collection history trace logs.
