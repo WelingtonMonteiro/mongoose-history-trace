@@ -52,6 +52,9 @@ const mongooseHistoryTrace = require('mongoose-history-trace')
 
 mongoose.plugin(mongooseHistoryTrace, options)
 ```
+
+## Result Log format
+
 The history trace logs documents have the format:
 
 
@@ -86,18 +89,17 @@ Initialize the plugin using the `addLoggedUser()` method, before call method mon
 Pass in second parameter, list of string contain names paths on saved. Example: 
 
 ```javascript
-const SELECT_PATHS_ON_SAVED = ['name', 'email', 'role']
-
-async function (req, res) {
-    const user = req.user   // GET user on request
+async function update (req, res) {
+    const user = req.user   //< -- GET user on request
     ...
-    UserModel.addLoggedUser(user, SELECT_PATHS_ON_SAVED)
+
+    Model.addLoggedUser(user)   //<-- SET LOGGED USER in context
     
+    const result = await Model.findByIdAndUpdate(query, {$set: mod})
+
+    return res.send(result)    
 }
 ```
-**SELECT_PATHS_ON_SAVED** [required] - Second parameter selects the fields of the object q will be saved.
-If nothing is passed, then the log will not be saved.
-
 
 ## Options
 #### - indexes
@@ -109,12 +111,25 @@ const options = {indexes: [{'documentNumber': -1, 'changes.path': 1}]}
 User.plugin(mongooseHistory, options)
 ```
 
-#### - isAtuhenticated
+#### - userPaths
+Required if saved logged user
+
+Selects the fields in the object logged user will be saved.
+
+If nothing is passed, then the log will not be saved:
+
+```javascript
+const options = {userPaths: ['name', 'email', 'address.city']}
+
+User.plugin(mongooseHistory, options)
+```
+
+#### - isAuthenticated
 Path 'user' in log history is required, but you can saved logs without path loggedUser. Example:
 
 Value default is `TRUE`
 ```javascript
-const options = {isAtuhenticated: false}
+const options = {isAuthenticated: false}
 
 User.plugin(mongooseHistory, options)
 ```
