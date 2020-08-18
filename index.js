@@ -1,3 +1,3 @@
 'use strict';
 
-module.exports = require('./lib/historyLog-model');
+module.exports = require('./lib/historyLog-plugin');
