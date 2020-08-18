@@ -188,8 +188,8 @@ _**Obs.:**_ It is not possible to add new fields in the `changes` field. New fie
 
 ### In progress
 
-* Method save logged user on history logs from request.
 * define label name in ```changes.label``` path.
+* save manual logs
 
 
 ## Credits
