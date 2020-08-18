@@ -11,7 +11,7 @@ This mongoose plugin allows you to save changes in the models. It provides two k
 ## Installation
 
 ```bash
-npm install mongoose-audit
+npm install mongoose-history-trace
 ```
 
 Or add it to your package.json
