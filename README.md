@@ -43,7 +43,7 @@ const mongooseHistoryTrace = require('mongoose-history-trace')
 
 mongoose.plugin(mongooseHistoryTrace, options)
 ```
-The plugin will create a new collection with name : historyTrace per default. 
+The plugin will create a new collection with name : historyTrace by default. 
 You can also change the name of the collection by setting the configuration customCollectionName:
 
 ```javascript
@@ -73,7 +73,7 @@ The history trace logs documents have the format:
         }
     ],
     "action": String           //name action "Created Document" | "Updated Document" | "Removed Document",
-    "module": String           // name of collection per default
+    "module": String           // name of collection by default
     "documentNumber": String   // _id of document schema
     "method": String           //name of method call: "updated" | "created" | "deleted"
 }
@@ -102,6 +102,41 @@ async function update (req, res) {
 ```
 
 ## Options
+
+#### - Custom value for label in `changes.label`
+by default, the label name is the same as the capitalized schema field name.
+It is possible to define a custom name, for that it is enough in the schema 
+to pass the private field `_label_` and custom value `"new label"`. Example:
+
+```javascript
+
+const User = new Schema({
+    "name": String, 
+    "active": {"type": String, "_label_":"Other Name Label"}, //<- define custom label in path
+    "phone": String
+})
+
+```
+Thus, instead of saving the capitalized name of the schema field, 
+save the name passed in the private field `_label_`. Example result:
+
+```javascript
+
+{
+    //...omited fields          
+    "changes": [ 
+        {
+            "to": true,       
+            "path": "active",     
+            "from": "",     
+            "ops": "created",     
+            "label": "Other Name Label"     //<- saved name pass in _label_ path in the schema 
+        }
+    ],
+    //...omited fields
+}
+
+```
 #### - indexes
 You can define indexes in collection, for example:
 
