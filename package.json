@@ -4,7 +4,7 @@
     "email": "welington.rmonteiro@gmail.com",
     "name": "Welington Monteiro"
   },
-  "version": "1.2.0",
+  "version": "1.3.0",
   "description": "Generate history logs operations mongoose (delete, update, create).",
   "repository": {
     "type": "git",
@@ -35,6 +35,9 @@
   },
   "main": "index.js",
   "scripts": {
-    "test": "NODE_PATH=. mocha test"
+    "test": "NODE_PATH=. mocha test",
+    "inc_patch": "yarn version --patch",
+    "inc_minor": "yarn version --minor",
+    "inc_major": "yarn version --major"
   }
 }
