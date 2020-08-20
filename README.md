@@ -1,12 +1,49 @@
+[![npm version](https://img.shields.io/npm/v/mongoose-history-trace.svg?style=flat)](https://npmjs.org/package/mongoose-history-trace "View this project on npm")
+[![Build Status](https://travis-ci.org/WelingtonMonteiro/mongoose-history-trace.svg?branch=master)](https://travis-ci.org/WelingtonMonteiro/mongoose-history-trace)
+[![Dependencies](https://img.shields.io/david/WelingtonMonteiro/mongoose-history-trace.svg?style=flat)](https://david-dm.org/welingtonMonteiro/mongoose-history-trace)
+![](https://img.shields.io/github/issues/WelingtonMonteiro/mongoose-history-trace.svg)
+![](https://img.shields.io/snyk/vulnerabilities/npm/mongoose-history-trace.svg)
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/834a606870e24d2b8fc04020d81f299b)](https://www.codacy.com/manual/WelingtonMonteiro/mongoose-history-trace?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=WelingtonMonteiro/mongoose-history-trace&amp;utm_campaign=Badge_Grade)
+[![Maintainability](https://api.codeclimate.com/v1/badges/0d8d8cbe686ce95c0d11/maintainability)](https://codeclimate.com/github/WelingtonMonteiro/mongoose-history-trace/maintainability)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/0d8d8cbe686ce95c0d11/test_coverage)](https://codeclimate.com/github/WelingtonMonteiro/mongoose-history-trace/test_coverage)
+[![License](https://img.shields.io/github/license/WelingtonMonteiro/mongoose-history-trace.svg)](https://github.com/WelingtonMonteiro/mongoose-history-trace/blob/master/LICENSE)
+
 # Mongoose History Trace Plugin
 
 Keeps a history of all changes of a document on schema.
 
+## Table of Contents
+
+-   [Introduction](#introduction)
+-   [Installation](#installation)
+-   [Usage](#usage)
+-   [Result Format](#result-format)
+-   [Methods](#methods)
+    -   [addLoggedUser({ object }, [fields])](#--addloggeduser-object--fields-required)
+ 
+-   [Options](#options)
+    -   [Custom value for label](#--custom-value-for-label-in-changeslabel)
+    
+    -   [options.indexes](#--indexes)
+    -   [options.userPaths](#--userPaths)
+    -   [options.isAuthenticated](#--isAuthenticated)
+    -   [options.customCollectionName](#--customCollectionName)
+    -   [options.moduleName](#--moduleName)
+    -   [options.omitPaths](#--omitPaths)
+    -   [options.connectionUri](#--connectionUri)
+    -   [options.addCollectionPaths](#--addCollectionPaths)
+    
+-   [In Progress](#in-progress)
+-   [Credits](#credits)
+-   [Tests](#tests)
+-   [Contributing](#contributing)
+-   [License](#license)
+ 
 ## Introduction
 
 This mongoose plugin allows you to save changes in the models. It provides two kind of save history logs:
 
-* It also register the activity in the *historyLogs* collection for default.
+* It also register the activity in the `historyLogs` collection name by default.
 
 ## Installation
 
@@ -43,7 +80,8 @@ const mongooseHistoryTrace = require('mongoose-history-trace')
 
 mongoose.plugin(mongooseHistoryTrace, options)
 ```
-The plugin will create a new collection with name : historyTrace by default. 
+The plugin will create a new collection with name `historyTrace` by default. 
+
 You can also change the name of the collection by setting the configuration customCollectionName:
 
 ```javascript
@@ -53,7 +91,7 @@ const mongooseHistoryTrace = require('mongoose-history-trace')
 mongoose.plugin(mongooseHistoryTrace, options)
 ```
 
-## Result Log format
+## Result Format
 
 The history trace logs documents have the format:
 
@@ -80,7 +118,7 @@ The history trace logs documents have the format:
 ```
 
 
-## Method Static
+## Methods
 #### - addLoggedUser({ object }, [fields]) [required]
 You can define logged user in request.
 
@@ -176,7 +214,7 @@ The resulting log will not contain the "user" field.
 
 #### - customCollectionName
 You can define name of collection history trace logs.
-By default, the name is **historyLogs**, for example:
+By default, the collection name is `historyLogs`, example:
 
 ```javascript
 const options = {customCollectionName: 'logs'}
@@ -186,7 +224,7 @@ User.plugin(mongooseHistory, options)
 
 #### - moduleName
 You can define moduleName path saved in history trace logs.
-By default, the module name is name of collection, for example:
+By default, the module name is name of collection, example:
 
 ```javascript
 const options = { moduleName: 'login-user' }
@@ -196,7 +234,7 @@ User.plugin(mongooseHistory, options)
 
 #### - omitPaths
 You can omit paths do not saved in history trace logs in path `changes:[]` from collection.
-By default, is paths `_id` and `__v` to be omited, for example:
+By default, is paths `_id` and `__v` to be omited, example:
 
 ```javascript
 const options = { omitPaths:['name', 'email', 'ip'] }
@@ -206,7 +244,7 @@ User.plugin(mongooseHistory, options)
 
 #### - connectionUri
 You can save `history trace logs` collection in another url database.
-By default, the collection is saved to the connection project itself, for example:
+By default, the collection is saved to the connection project itself, example:
 
 ```javascript
 const options = { connectionUri: 'mongodb://localhost/other_db' }
@@ -215,7 +253,7 @@ User.plugin(mongooseHistory, options)
 ```
 
 #### - addCollectionPaths
-You can add new paths in collection history trace logs, for example:
+You can add new paths in collection history trace logs, example:
 
 ```javascript
 const options = { addCollectionPaths:[
@@ -249,6 +287,17 @@ This work was inspired by:
 * https://www.npmjs.com/package/mongoose-history
 * https://github.com/drudge/mongoose-audit
 
+
+## Tests
+Run test with command: `npm test`
+
+
+## Contributing
+
+-   Use prettify and eslint to lint your code.
+-   Add tests for any new or changed functionality.
+-   Update the readme with an example if you add or change any functionality.
+-   Open Pull Request
 
 ## LICENSE
 MIT License
