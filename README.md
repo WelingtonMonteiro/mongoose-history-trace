@@ -1,5 +1,7 @@
 # Mongoose History Trace Plugin
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/d6455f0f911941b18911715e9474d079)](https://app.codacy.com/manual/WelingtonMonteiro/mongoose-history-trace?utm_source=github.com&utm_medium=referral&utm_content=WelingtonMonteiro/mongoose-history-trace&utm_campaign=Badge_Grade_Dashboard)
+
 Keeps a history of all changes of a document on schema.
 
 ## Introduction
