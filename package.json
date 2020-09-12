@@ -4,7 +4,7 @@
     "email": "welington.rmonteiro@gmail.com",
     "name": "Welington Monteiro"
   },
-  "version": "1.3.1",
+  "version": "1.4.0",
   "description": "Generate history logs operations mongoose (delete, update, create).",
   "repository": {
     "type": "git",
@@ -18,26 +18,110 @@
     "mongoose",
     "plugin",
     "history",
-    "logs"
+    "logs",
+    "audit",
+    "auditory",
+    "tracer",
+    "schema",
+    "diff",
+    "difference"
   ],
   "license": "MIT",
   "engines": {
-    "node": "14"
+    "node": ">=8"
   },
   "devDependencies": {
+    "bluebird": "*",
+    "chai": "*",
+    "coveralls": "*",
     "mocha": "*",
-    "should": "*"
+    "nyc": "*",
+    "should": "*",
+    "sinon": "*",
+    "sinon-test": "*",
+    "snazzy": "*",
+    "standard": "*"
   },
   "dependencies": {
-    "deep-diff": "^1.0.2",
+    "deep-diff": "1.0.2",
     "lodash": "4.17.20",
-    "mongoose": "5.10.0"
+    "mongoose": "5.10.4"
   },
   "main": "index.js",
   "scripts": {
-    "test": "NODE_PATH=. mocha test",
+    "test": "npm run fix-lint && npm run lint && npm run mocha",
+    "coverage": "nyc npm run test",
+    "mocha": "mocha --file \"./test/setup.js\" \"./test/**/*-spec.js\" --exit",
+    "fix-lint": "standard --fix",
+    "lint": "standard --verbose | snazzy",
+    "release": "git pull && git push origin master --tags && npm publish",
+    "test-cov": "nyc --reporter=html --reporter=text npm test",
     "inc_patch": "yarn version --patch",
     "inc_minor": "yarn version --minor",
     "inc_major": "yarn version --major"
+  },
+  "nyc": {
+    "all": true,
+    "branches": 100,
+    "functions": 100,
+    "lines": 100,
+    "statements": 100,
+    "cache": true,
+    "check-coverage": true,
+    "exclude": [
+      "test",
+      "coverage",
+      "node_modules",
+      "index.js"
+    ],
+    "extension": [],
+    "report-dir": "coverage",
+    "include": [
+      "lib/**/*.js"
+    ],
+    "per-file": false,
+    "reporter": [
+      "lcov",
+      "text",
+      "text-summary",
+      "html",
+      "lcovonly"
+    ],
+    "require": [],
+    "watermarks": {
+      "branches": [
+        80,
+        95
+      ],
+      "functions": [
+        80,
+        95
+      ],
+      "lines": [
+        80,
+        95
+      ],
+      "statements": [
+        80,
+        95
+      ]
+    }
+  },
+  "standard": {
+    "globals": [
+      "describe",
+      "it",
+      "after",
+      "before",
+      "afterEach",
+      "beforeEach",
+      "context",
+      "expect",
+      "sinon",
+      "chai"
+    ],
+    "ignore": [
+      "test/"
+    ]
   }
 }
