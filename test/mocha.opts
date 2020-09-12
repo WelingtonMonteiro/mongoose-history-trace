@@ -1,2 +1,6 @@
---require should
--R spec
+-r ./test/setup
+--reporter spec
+--ui bdd
+--recursive
+--timeout 50000
+--exit

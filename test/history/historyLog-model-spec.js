@@ -1,6 +1,8 @@
 'use strict'
 const { HistoryLogModel } = require('../../lib/historyLog-model')
-const { keys, set } = require('lodash')
+const { keys, set, get } = require('lodash')
+const mongoose = require('mongoose')
+mongoose.Promise = global.Promise
 
 describe('class HistoryModel', () => {
   const defaultSchema = {
@@ -14,8 +16,8 @@ describe('class HistoryModel', () => {
   }
 
   context('Initialize default model', () => {
-    it('Should initialize Model without options return model default model configuration', async () => {
-      const HistoryModel = HistoryLogModel()
+    it('Should initialize Model without options return model default model configuration', test(async () => {
+      const HistoryModel = await getHistoryModel()
 
       expect(HistoryModel.modelName).to.be.eq('historyLogs')
       expect(HistoryModel.collection.name).to.be.eq('historyLogs')
@@ -26,18 +28,17 @@ describe('class HistoryModel', () => {
       expect(HistoryModel.schema._indexes[0][0]).to.be.deep.eql({ module: 1 })
       expect(HistoryModel.schema._indexes[1][0]).to.be.deep.eql({ method: 1 })
       expect(HistoryModel.schema._indexes[2][0]).to.be.deep.eql({ documentNumber: 1 })
-    })
+    }))
   })
   context('Initialize OPTIONS model', () => {
-    it('Should initialize Model without options.indexes', async () => {
+    it('Should initialize Model with options.indexes', test(async () => {
       const options = {
-        indexes: [{ 'changes.label': 1 }],
-        customCollectionName: 'name1'
+        indexes: [{ 'changes.label': 1 }]
       }
-      const HistoryModel = HistoryLogModel(options)
+      const HistoryModel = await getHistoryModel(options)
 
-      expect(HistoryModel.modelName).to.be.eq('name1')
-      expect(HistoryModel.collection.name).to.be.eq('name1')
+      expect(HistoryModel.modelName).to.be.eq('historyLogs')
+      expect(HistoryModel.collection.name).to.be.eq('historyLogs')
       expect(HistoryModel.name).to.be.eq('model')
       expect(keys(HistoryModel.schema.obj)).to.be.deep.eql(keys(defaultSchema))
 
@@ -47,19 +48,19 @@ describe('class HistoryModel', () => {
       expect(HistoryModel.schema._indexes[2][0]).to.be.deep.eql({ documentNumber: 1 })
       expect(HistoryModel.schema._indexes[3][0]).to.be.deep.eql({ 'changes.label': 1 })
 
-    })
-    it('Should initialize Model without options.addCollectionPaths', async () => {
+    }))
+    it('Should initialize Model with options.addCollectionPaths', test(async () => {
       const options = {
-        addCollectionPaths: [{ key: 'otherFields', value: 'String' }],
-        customCollectionName: 'name2'
+        addCollectionPaths: [{ key: 'otherFields', value: 'String' }]
       }
-      const HistoryModel = HistoryLogModel(options)
+
+      const HistoryModel = await getHistoryModel(options)
       const addFieldSchema = JSON.parse(JSON.stringify(defaultSchema))
 
       set(addFieldSchema, 'otherFields', 'String')
 
-      expect(HistoryModel.modelName).to.be.eq('name2')
-      expect(HistoryModel.collection.name).to.be.eq('name2')
+      expect(HistoryModel.modelName).to.be.eq('historyLogs')
+      expect(HistoryModel.collection.name).to.be.eq('historyLogs')
       expect(HistoryModel.name).to.be.eq('model')
       expect(keys(HistoryModel.schema.obj)).to.be.deep.eql(keys(addFieldSchema))
 
@@ -67,16 +68,56 @@ describe('class HistoryModel', () => {
       expect(HistoryModel.schema._indexes[0][0]).to.be.deep.eql({ module: 1 })
       expect(HistoryModel.schema._indexes[1][0]).to.be.deep.eql({ method: 1 })
       expect(HistoryModel.schema._indexes[2][0]).to.be.deep.eql({ documentNumber: 1 })
-    })
-    it('Should initialize Model without options.connectionUri', async () => {
+    }))
+    it('Should initialize Model with options.addCollectionPaths and options.defaultValue', test(async () => {
+      const options = {
+        addCollectionPaths: [{ key: 'otherFields', value: 'String', defaultValue: '' }],
+        // customCollectionName: 'name3'
+      }
+      const HistoryModel = await getHistoryModel(options)
+      const addFieldSchema = JSON.parse(JSON.stringify(defaultSchema))
+
+      set(addFieldSchema, 'otherFields', 'String')
+
+      expect(HistoryModel.modelName).to.be.eq('historyLogs')
+      expect(HistoryModel.collection.name).to.be.eq('historyLogs')
+      expect(HistoryModel.name).to.be.eq('model')
+      expect(keys(HistoryModel.schema.obj)).to.be.deep.eql(keys(addFieldSchema))
+
+      expect(HistoryModel.schema._indexes.length).to.be.eq(3)
+      expect(HistoryModel.schema._indexes[0][0]).to.be.deep.eql({ module: 1 })
+      expect(HistoryModel.schema._indexes[1][0]).to.be.deep.eql({ method: 1 })
+      expect(HistoryModel.schema._indexes[2][0]).to.be.deep.eql({ documentNumber: 1 })
+    }))
+    it('Should initialize Model with options.addCollectionPaths without type value', test(async () => {
+      const options = {
+        addCollectionPaths: [{ key: 'otherFields' }],
+      }
+
+      const HistoryModel = await getHistoryModel(options)
+      const addFieldSchema = JSON.parse(JSON.stringify(defaultSchema))
+
+      set(addFieldSchema, 'otherFields', 'String')
+
+      expect(HistoryModel.modelName).to.be.eq('historyLogs')
+      expect(HistoryModel.collection.name).to.be.eq('historyLogs')
+      expect(HistoryModel.name).to.be.eq('model')
+      expect(keys(HistoryModel.schema.obj)).to.be.deep.eql(keys(addFieldSchema))
+
+      expect(HistoryModel.schema._indexes.length).to.be.eq(3)
+      expect(HistoryModel.schema._indexes[0][0]).to.be.deep.eql({ module: 1 })
+      expect(HistoryModel.schema._indexes[1][0]).to.be.deep.eql({ method: 1 })
+      expect(HistoryModel.schema._indexes[2][0]).to.be.deep.eql({ documentNumber: 1 })
+    }))
+    it('Should initialize Model without options.connectionUri', test(async () => {
       const options = {
         connectionUri: 'mongodb://localhost/other_database',
-        customCollectionName: 'name3'
       }
-      const HistoryModel = HistoryLogModel(options)
 
-      expect(HistoryModel.modelName).to.be.eq('name3')
-      expect(HistoryModel.collection.name).to.be.eq('name3')
+      const HistoryModel = await getHistoryModel(options)
+
+      expect(HistoryModel.modelName).to.be.eq('historyLogs')
+      expect(HistoryModel.collection.name).to.be.eq('historyLogs')
       expect(HistoryModel.name).to.be.eq('model')
       expect(keys(HistoryModel.schema.obj)).to.be.deep.eql(keys(defaultSchema))
 
@@ -85,8 +126,41 @@ describe('class HistoryModel', () => {
       expect(HistoryModel.schema._indexes[1][0]).to.be.deep.eql({ method: 1 })
       expect(HistoryModel.schema._indexes[2][0]).to.be.deep.eql({ documentNumber: 1 })
 
-      expect(HistoryModel.db._connectionString).to.be.deep.eql('mongodb://localhost/other_database')
-    })
+      expect(HistoryModel.db.name).to.be.eq('other_database')
+    }))
   })
 })
+
+async function getHistoryModel (options) {
+  await deleteModel('historyLogs')
+  return HistoryLogModel(options)
+}
+
+async function deleteModel (name) {
+  if (typeof name === 'string') {
+    const model = mongoose.models[name]
+    if (model == null) return
+    const collectionName = get(model, 'collection.name')
+    if (!collectionName) return
+    if (mongoose.models) delete mongoose.models[`${name}`]
+    if (mongoose.collections) delete mongoose.collections[`${collectionName}`]
+    if (mongoose.modelSchemas) delete mongoose.modelSchemas[`${name}`]
+    if (mongoose.connections.length) {
+      mongoose.connections.map(item => {
+        if (item.models) delete item.models[`${name}`]
+        if (item.base && item.base.modelSchemas) delete item.base.modelSchemas[`${name}`]
+        if (item.collections) delete item.collections[`${collectionName}`]
+      })
+    }
+  }
+  if (name instanceof RegExp) {
+    const pattern = name
+    const names = mongoose.modelNames()
+    for (const name of names) {
+      if (pattern.test(name)) {
+        await deleteModel(name)
+      }
+    }
+  }
+}
 
