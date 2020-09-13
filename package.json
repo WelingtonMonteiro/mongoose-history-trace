@@ -49,10 +49,10 @@
   },
   "main": "index.js",
   "scripts": {
-    "test": "npm run fix-lint && npm run lint && npm run mocha && npm run coverage",
+    "test": "npm run fix-lint && npm run lint && npm run mocha",
     "test-coverage": "npm run test && npm run coverage",
-    "coverage": "nyc",
-    "mocha": "mocha --file \"./test/setup.js\" \"./test/**/*-spec.js\" --exit",
+    "coverage": "NODE_ENV=test nyc npm run mocha",
+    "mocha": "NODE_ENV=test mocha --file \"./test/setup.js\" \"./test/**/*-spec.js\"  -R spec --exit",
     "fix-lint": "standard --fix",
     "lint": "standard --verbose | snazzy",
     "release": "git pull && git push origin master --tags && npm publish",
