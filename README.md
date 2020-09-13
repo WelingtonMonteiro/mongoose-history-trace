@@ -16,7 +16,7 @@
 > This plugin for [Mongoose][] , aims to save the differences in the changes between the changed objects in the database, saving them in a collection and supporting their auditing.
   Currently supports all methods of mongoose: update , create, delete and its variations (findByIdAndUpdate, updateMany, updateOne, deleteMany, UpdaOne, FindOneAndUpdate, save, create, delete, update, etc.).
   
-  [Mongoose][] version suported: `>=v5.2.0` or then.
+  [Mongoose][] version suported: `>=v5.2.0` or higher.
 
 ## Table of Contents
 
