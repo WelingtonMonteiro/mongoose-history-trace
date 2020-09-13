@@ -49,7 +49,7 @@
   },
   "main": "index.js",
   "scripts": {
-    "test": "npm run fix-lint && npm run lint && npm run mocha && npm run coverag",
+    "test": "npm run fix-lint && npm run lint && npm run mocha && npm run coverage",
     "test-coverage": "npm run test && npm run coverage",
     "coverage": "nyc",
     "mocha": "mocha --file \"./test/setup.js\" \"./test/**/*-spec.js\" --exit",
