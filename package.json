@@ -4,7 +4,7 @@
     "email": "welington.rmonteiro@gmail.com",
     "name": "Welington Monteiro"
   },
-  "version": "1.4.4",
+  "version": "1.4.5",
   "description": "Generate history logs operations mongoose (delete, update, create).",
   "repository": {
     "type": "git",
