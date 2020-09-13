@@ -11,7 +11,9 @@ cache:
   directories:
     - node_modules
 install:
+  - npm install
   - npm install nyc -g
+  - npm install standart -g
 before_script:
   - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
   - chmod +x ./cc-test-reporter
