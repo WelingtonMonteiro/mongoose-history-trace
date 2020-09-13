@@ -142,7 +142,7 @@ mongoose.plugin(mongooseHistoryTrace, options)
 #### - addLoggedUser({ object }) [required]
 > You can define logged user in request.
 Initialize the plugin using the `addLoggedUser()` method, before call method mongoose. 
-Pass in second parameter, list of string contain names paths on saved. Example: 
+Example: 
 
 ```javascript
 async function update (req, res) {
@@ -201,6 +201,10 @@ async function update (req, res) {
 **method `{String} [required]`**: Name of operation to saved (`updated`, `deleted`, `created`) <br>
 
 **Obs.:** You can create log history without path logged user, pass in options plugin `{isAuthenticated: false}` [Save without logged user](#--isAuthenticated)
+
+
+ [Back to Table Contents](#table-of-contents)
+
 ## Options
 
 #### - Custom value for label in `changes.label`
@@ -247,8 +251,7 @@ It is possible to define a custom path name, for this, just define a custom path
 
 ```javascript
 
-{
-    //...omited fields in options        
+const options = {
     "changeTransform": {
             "to": "newPathName",       
             "path": "newPathName",     
@@ -256,8 +259,9 @@ It is possible to define a custom path name, for this, just define a custom path
             "ops": "newPathName",     
             "label": "newPathName"      
         }
-    //...omited fields in options
 }
+
+User.plugin(mongooseHistory, options)
 
 ```
 It is possible to change all fields in changes.
