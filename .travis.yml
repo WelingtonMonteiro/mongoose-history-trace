@@ -19,6 +19,6 @@ before_script:
   - chmod +x ./cc-test-reporter
   - ./cc-test-reporter before-build
 script:
-  - nyc --reporter=lcov npm run test
+  - npm test
 after_script:
-  - ./cc-test-reporter after-build
+  - ./cc-test-reporter after-build -t lcov --exit-code $TRAVIS_TEST_RESULT
