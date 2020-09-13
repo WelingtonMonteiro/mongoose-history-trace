@@ -4,9 +4,7 @@ node_js:
   - '10'
   - '12'
   - '14'
-env:
-  - NODE_ENV=test
-  - CC_TEST_REPORTER_ID=d7c86f6bfefd3c14234c7d3d52674054dae83bef81c37bdd3d317153bfb12da6
+
 cache:
   directories:
     - node_modules
