@@ -1,5 +1,5 @@
 'use strict'
-const { HistoryLogModel } = require('../../lib/historyLog-model')
+const { HistoryLogModel } = require('../../lib/model')
 const { keys, set, get } = require('lodash')
 const mongoose = require('mongoose')
 mongoose.Promise = global.Promise
@@ -47,7 +47,6 @@ describe('class HistoryModel', () => {
       expect(HistoryModel.schema._indexes[1][0]).to.be.deep.eql({ method: 1 })
       expect(HistoryModel.schema._indexes[2][0]).to.be.deep.eql({ documentNumber: 1 })
       expect(HistoryModel.schema._indexes[3][0]).to.be.deep.eql({ 'changes.label': 1 })
-
     }))
     it('Should initialize Model with options.addCollectionPaths', test(async () => {
       const options = {

@@ -1,3 +1,3 @@
 'use strict'
 
-module.exports = require('./lib/historyLog-plugin')
+module.exports = require('./lib/plugin')

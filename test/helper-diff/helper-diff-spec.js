@@ -1,4 +1,4 @@
-const { getDiff, _capitalizedKey, _getLabel, _getCustomLabel, _objectMapped, _changeTransformToView } = require('../../lib/helper-diff')
+const { getDiff, _capitalizedKey, _getLabel, _getCustomLabel, _objectMapped, _changeTransformToView } = require('../../lib/diffHelper')
 const { Schema } = require('mongoose')
 const { keys } = require('lodash')
 

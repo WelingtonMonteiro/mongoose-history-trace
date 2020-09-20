@@ -1,21 +1,18 @@
 'use strict'
-const mongooseHistoryTrace = require('../../lib/historyLog-plugin')
-const { HistoryLogModel } = require('../../lib/historyLog-model')
+const mongooseHistoryTrace = require('../../lib/plugin')
+const { HistoryLogModel } = require('../../lib/model')
 const ObjectId = require('mongoose').Types.ObjectId
 const mongoose = require('mongoose')
 const Promise = require('bluebird')
-const { toString, get, map, keys, isEmpty } = require('lodash')
-const dbOptions = {
-  autoIndex: false,
-  useNewUrlParser: true,
-  useFindAndModify: false,
-  useUnifiedTopology: true
-}
+const { toString, get, map, keys, isEmpty, merge } = require('lodash')
+
 mongoose.Promise = global.Promise
 
 describe('Mongoose-History-Trace', async () => {
+  const dbOptions = getOptionsVersionInstance (mongoose)
+
   beforeEach(async () => {
-    await mongoose.connect('mongodb://localhost/test', dbOptions)
+    await mongoose.connect('mongodb://localhost:27017/test', dbOptions)
   })
   afterEach(async () => {
     await removeAllCollections()
@@ -576,11 +573,11 @@ describe('Mongoose-History-Trace', async () => {
         const mod = { _id, name: 'John Doe', email: 'john@email.com', phone: '999-99999' }
         const options = { isAuthenticated: false }
 
-        await _helperCreateOrUpdateOrRemoveDocument('John Doe', schema, mod, null, options)
+        await _helperCreateOrUpdateOrRemoveDocument('create', schema, mod, null, options)
         const HistoryModel = await getHistoryModel()
         await HistoryModel.deleteMany({})
 
-        const { history } = await _helperCreateOrUpdateOrRemoveDocument('updateOne', schema, { name: 'Joe Doe' }, { _id }, options)
+        const { history } = await _helperCreateOrUpdateOrRemoveDocument('updateOne', schema, { name: 'John Doe' }, { _id }, options)
 
         expect(history.length).to.be.eq(0)
       }))
@@ -618,11 +615,11 @@ describe('Mongoose-History-Trace', async () => {
         const mod = { _id, name: 'John Doe', email: 'john@email.com', phone: '999-99999' }
         const options = { isAuthenticated: false }
 
-        await _helperCreateOrUpdateOrRemoveDocument('John Doe', schema, mod, null, options)
+        await _helperCreateOrUpdateOrRemoveDocument('create', schema, mod, null, options)
         const HistoryModel = await getHistoryModel()
         await HistoryModel.deleteMany({})
 
-        const { history } = await _helperCreateOrUpdateOrRemoveDocument('updateMany', schema, { name: 'Joe Doe' }, { _id }, options)
+        const { history } = await _helperCreateOrUpdateOrRemoveDocument('updateMany', schema, { name: 'John Doe' }, { _id }, options)
 
         expect(history.length).to.be.eq(0)
       }))
@@ -660,11 +657,11 @@ describe('Mongoose-History-Trace', async () => {
         const mod = { _id, name: 'John Doe', email: 'john@email.com', phone: '999-99999' }
         const options = { isAuthenticated: false }
 
-        await _helperCreateOrUpdateOrRemoveDocument('John Doe', schema, mod, null, options)
+        await _helperCreateOrUpdateOrRemoveDocument('create',schema, mod, null, options)
         const HistoryModel = await getHistoryModel()
         await HistoryModel.deleteMany({})
 
-        const { history } = await _helperCreateOrUpdateOrRemoveDocument('findOneAndReplace', schema, { name: 'Joe Doe' }, { _id }, options)
+        const { history } = await _helperCreateOrUpdateOrRemoveDocument('findOneAndReplace', schema, { name: 'John Doe' }, { _id }, options)
 
         expect(history.length).to.be.eq(0)
       }))
@@ -702,11 +699,11 @@ describe('Mongoose-History-Trace', async () => {
         const mod = { _id, name: 'John Doe', email: 'john@email.com', phone: '999-99999' }
         const options = { isAuthenticated: false }
 
-        await _helperCreateOrUpdateOrRemoveDocument('John Doe', schema, mod, null, options)
+        await _helperCreateOrUpdateOrRemoveDocument('create', schema, mod, null, options)
         const HistoryModel = await getHistoryModel()
         await HistoryModel.deleteMany({})
 
-        const { history } = await _helperCreateOrUpdateOrRemoveDocument('replaceOne', schema, { name: 'Joe Doe' }, { _id }, options)
+        const { history } = await _helperCreateOrUpdateOrRemoveDocument('replaceOne', schema, { name: 'John Doe' }, { _id }, options)
 
         expect(history.length).to.be.eq(0)
       }))
@@ -1143,11 +1140,14 @@ async function removeAllCollections () {
   await History.deleteMany({})
   await mongoose.connection.db.dropDatabase()
 }
-//
-// async function deleteModel (modelName) {
-//   if (!modelName && mongoose.connection.deleteModel) return mongoose.connection.deleteModel(/.+/)
-//   if (mongoose.models[modelName] && mongoose.deleteModel) return mongoose.deleteModel(modelName)
-// }
+
+function getOptionsVersionInstance (mongooseInstance) {
+  const version = parseInt(mongooseInstance.version)
+  if (version < 5) {
+    return merge({}, { useMongoClient: true })
+  }
+  return merge({}, { useUnifiedTopology: true, useNewUrlParser: true, useFindAndModify: false, autoIndex: true })
+}
 
 async function deleteModel (name) {
   if (typeof name === 'string') {
