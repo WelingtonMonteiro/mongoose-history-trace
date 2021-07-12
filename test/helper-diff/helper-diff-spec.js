@@ -1,4 +1,4 @@
-const { getDiff, _capitalizedKey, _getLabel, _getCustomLabel, _objectMapped, _changeTransformToView } = require('../../lib/diffHelper')
+const {deepDiff, getDiff, _diffArray, _capitalizedKey, _getLabel, _getCustomLabel, _objectMapped, _changeTransformToView } = require('../../lib/diffHelper')
 const { Schema } = require('mongoose')
 const { keys } = require('lodash')
 
@@ -220,6 +220,21 @@ describe('class HelperDiff', () => {
       expect(keys(result)).to.be.include('field')
       expect(keys(result)).to.be.include('action')
       expect(keys(result)).to.be.include('pathFlatten')
+    })
+  })
+  context.only('method ._diffArray', () => {
+    it('Should without options and change return null', () => {
+      const result = _diffArray()
+
+      expect(result.length).to.be.eq(0)
+    })
+    it('Should change without options return default paths on change', () => {
+      const old = [{_id_: '1125111215' a: 3 }, { a: 2 }]
+      const current = [ {}, { a: 4 }, { a: 2 },]
+      const result = deepDiff(old, current)
+      expect(result).to.deep.eql([1,2, 5])
+      // expect(_diffArray(['a', 'b', 'c'], ['c', 'd'])).to.deep.eql(['a', 'b', 'd'])
+      // expect(_diffArray([{ a: 1 }, {a: 2}], [{ a: 3 }, {a: 2}])).to.deep.eql(['a', 'b', 'd'])
     })
   })
   context('method ._objectMapped', () => {
