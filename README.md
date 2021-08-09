@@ -21,7 +21,7 @@
 ## Table of Contents
 
 * [Introduction](#introduction)
-* [Installation](#installation)
+* [Installation](#Install)
 * [Usage](#usage)
 * [Result Format](#result-format)
 * [Methods](#methods)
@@ -30,15 +30,15 @@
    * [Model.createHistory({ old, current, loggedUser, method })](#--createhistory-old-current-loggeduser-method-)
 * [Options](#options)
    * [Custom value for label](#--custom-value-for-label-in-changeslabel)    
-   * [Define custom path name in changes](#--changeTransform)
+   * [Define custom path name in changes](#--changetransform)
    * [Indexes](#--indexes)
-   * [Define path user](#--userPaths)
-   * [Save without logged user](#--isAuthenticated)
-   * [Define custom collection name](#--customCollectionName)
-   * [Define custom module name](#--moduleName)
-   * [Omit paths collection on save](#--omitPaths)
-   * [Save in other connection](#--connectionUri)
-   * [Add new fields on logs](#--addCollectionPaths)
+   * [Define path user](#--userpaths)
+   * [Save without logged user](#--isauthenticated)
+   * [Define custom collection name](#--customcollectionname)
+   * [Define custom module name](#--modulename)
+   * [Omit paths collection on save](#--omitpaths)
+   * [Save in other connection](#--connectionuri)
+   * [Add new fields on logs](#--addcollectionpaths)
 * [Credits](#credits)
 * [Tests](#tests)
 * [Contributing](#contributing)
@@ -122,6 +122,8 @@ mongoose.plugin(mongooseHistoryTrace, options)
     "user": { Mixed }           // paths defined for you
     "changes": [ 
         {
+            "index": Number,    // index position if a array, default null
+            "isArray": Boolean, // if is path is array, default false 
             "to": String,       // current path modification
             "path": String,     // name path schema
             "from": String,     // old path modification
@@ -171,7 +173,7 @@ async function update (req, res) {
     const result = Model.getChangeDiffs(old, current)
     /**
     result:
-     [{label, ops, path, from, to}]
+     [{label, ops, path, from, to, isArray, index}]
     **/
 }
 ```
@@ -230,6 +232,8 @@ save the name passed in the private field `_label_`. Example result:
     //...omited fields          
     "changes": [ 
         {
+            "isArray": false,
+            "index": null,
             "to": true,       
             "path": "active",     
             "from": "",     
