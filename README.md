@@ -122,6 +122,8 @@ mongoose.plugin(mongooseHistoryTrace, options)
     "user": { Mixed }           // paths defined for you
     "changes": [ 
         {
+            "index": Number,    // index position if a array, default null
+            "isArray": Boolean, // if is path is array, default false 
             "to": String,       // current path modification
             "path": String,     // name path schema
             "from": String,     // old path modification
@@ -171,7 +173,7 @@ async function update (req, res) {
     const result = Model.getChangeDiffs(old, current)
     /**
     result:
-     [{label, ops, path, from, to}]
+     [{label, ops, path, from, to, isArray, index}]
     **/
 }
 ```
@@ -230,6 +232,8 @@ save the name passed in the private field `_label_`. Example result:
     //...omited fields          
     "changes": [ 
         {
+            "isArray": false,
+            "index": null,
             "to": true,       
             "path": "active",     
             "from": "",     
