@@ -809,16 +809,16 @@ describe('Mongoose-History-Trace', async () => {
         expect(history[0].changes.length).to.be.eq(4)
 
         expect(history[0].changes[0]).to.be.deep.eql({
-          'to': '', 'path': 'name', 'from': 'John Doe', 'ops': 'Deleted', 'label': 'Name'
+          'to': '', 'path': 'name', 'from': 'John Doe', 'ops': 'Deleted', 'label': 'Name', 'index': null, isArray: false
         })
         expect(history[0].changes[1]).to.be.deep.eql({
-          'to': '', 'path': 'email', 'from': 'john@email.com', 'ops': 'Deleted', 'label': 'Email'
+          'to': '', 'path': 'email', 'from': 'john@email.com', 'ops': 'Deleted', 'label': 'Email', 'index': null, isArray: false
         })
         expect(history[0].changes[2]).to.be.deep.eql({
-          'to': '', 'path': 'phone', 'from': '999-99999', 'ops': 'Deleted', 'label': 'Phone'
+          'to': '', 'path': 'phone', 'from': '999-99999', 'ops': 'Deleted', 'label': 'Phone', 'index': null, isArray: false
         })
         expect(history[0].changes[3]).to.be.deep.eql({
-          'to': '', 'path': '__v', 'from': 0, 'ops': 'Deleted', 'label': 'V'
+          'to': '', 'path': '__v', 'from': 0, 'ops': 'Deleted', 'label': 'V', 'index': null, isArray: false
         })
 
         expect(history[0].action).to.be.eq('Removed Document')
@@ -844,16 +844,16 @@ describe('Mongoose-History-Trace', async () => {
         expect(history[0].changes.length).to.be.eq(4)
 
         expect(history[0].changes[0]).to.be.deep.eql({
-          'to': '', 'path': 'name', 'from': 'John Doe', 'ops': 'Deleted', 'label': 'Name'
+          'to': '', 'path': 'name', 'from': 'John Doe', 'ops': 'Deleted', 'label': 'Name', 'index': null, isArray: false
         })
         expect(history[0].changes[1]).to.be.deep.eql({
-          'to': '', 'path': 'email', 'from': 'john@email.com', 'ops': 'Deleted', 'label': 'Email'
+          'to': '', 'path': 'email', 'from': 'john@email.com', 'ops': 'Deleted', 'label': 'Email', 'index': null, isArray: false
         })
         expect(history[0].changes[2]).to.be.deep.eql({
-          'to': '', 'path': 'phone', 'from': '999-99999', 'ops': 'Deleted', 'label': 'Phone'
+          'to': '', 'path': 'phone', 'from': '999-99999', 'ops': 'Deleted', 'label': 'Phone', 'index': null, isArray: false
         })
         expect(history[0].changes[3]).to.be.deep.eql({
-          'to': '', 'path': '__v', 'from': 0, 'ops': 'Deleted', 'label': 'V'
+          'to': '', 'path': '__v', 'from': 0, 'ops': 'Deleted', 'label': 'V', 'index': null, isArray: false
         })
 
         expect(history[0].action).to.be.eq('Removed Document')
@@ -879,16 +879,16 @@ describe('Mongoose-History-Trace', async () => {
         expect(history[0].changes.length).to.be.eq(4)
 
         expect(history[0].changes[0]).to.be.deep.eql({
-          'to': '', 'path': 'name', 'from': 'John Doe', 'ops': 'Deleted', 'label': 'Name'
+          'to': '', 'path': 'name', 'from': 'John Doe', 'ops': 'Deleted', 'label': 'Name', 'index': null, isArray: false
         })
         expect(history[0].changes[1]).to.be.deep.eql({
-          'to': '', 'path': 'email', 'from': 'john@email.com', 'ops': 'Deleted', 'label': 'Email'
+          'to': '', 'path': 'email', 'from': 'john@email.com', 'ops': 'Deleted', 'label': 'Email', 'index': null, isArray: false
         })
         expect(history[0].changes[2]).to.be.deep.eql({
-          'to': '', 'path': 'phone', 'from': '999-99999', 'ops': 'Deleted', 'label': 'Phone'
+          'to': '', 'path': 'phone', 'from': '999-99999', 'ops': 'Deleted', 'label': 'Phone', 'index': null, isArray: false
         })
         expect(history[0].changes[3]).to.be.deep.eql({
-          'to': '', 'path': '__v', 'from': 0, 'ops': 'Deleted', 'label': 'V'
+          'to': '', 'path': '__v', 'from': 0, 'ops': 'Deleted', 'label': 'V', 'index': null, isArray: false
         })
 
         expect(history[0].action).to.be.eq('Removed Document')
@@ -914,16 +914,16 @@ describe('Mongoose-History-Trace', async () => {
         expect(history[0].changes.length).to.be.eq(4)
 
         expect(history[0].changes[0]).to.be.deep.eql({
-          'to': '', 'path': 'name', 'from': 'John Doe', 'ops': 'Deleted', 'label': 'Name'
+          'to': '', 'path': 'name', 'from': 'John Doe', 'ops': 'Deleted', 'label': 'Name', 'index': null, isArray: false
         })
         expect(history[0].changes[1]).to.be.deep.eql({
-          'to': '', 'path': 'email', 'from': 'john@email.com', 'ops': 'Deleted', 'label': 'Email'
+          'to': '', 'path': 'email', 'from': 'john@email.com', 'ops': 'Deleted', 'label': 'Email', 'index': null, isArray: false
         })
         expect(history[0].changes[2]).to.be.deep.eql({
-          'to': '', 'path': 'phone', 'from': '999-99999', 'ops': 'Deleted', 'label': 'Phone'
+          'to': '', 'path': 'phone', 'from': '999-99999', 'ops': 'Deleted', 'label': 'Phone', 'index': null, isArray: false
         })
         expect(history[0].changes[3]).to.be.deep.eql({
-          'to': '', 'path': '__v', 'from': 0, 'ops': 'Deleted', 'label': 'V'
+          'to': '', 'path': '__v', 'from': 0, 'ops': 'Deleted', 'label': 'V', 'index': null, isArray: false
         })
 
         expect(history[0].action).to.be.eq('Removed Document')
@@ -949,16 +949,16 @@ describe('Mongoose-History-Trace', async () => {
         expect(history[0].changes.length).to.be.eq(4)
 
         expect(history[0].changes[0]).to.be.deep.eql({
-          'to': '', 'path': 'name', 'from': 'John Doe', 'ops': 'Deleted', 'label': 'Name'
+          'to': '', 'path': 'name', 'from': 'John Doe', 'ops': 'Deleted', 'label': 'Name', 'index': null, isArray: false
         })
         expect(history[0].changes[1]).to.be.deep.eql({
-          'to': '', 'path': 'email', 'from': 'john@email.com', 'ops': 'Deleted', 'label': 'Email'
+          'to': '', 'path': 'email', 'from': 'john@email.com', 'ops': 'Deleted', 'label': 'Email', 'index': null, isArray: false
         })
         expect(history[0].changes[2]).to.be.deep.eql({
-          'to': '', 'path': 'phone', 'from': '999-99999', 'ops': 'Deleted', 'label': 'Phone'
+          'to': '', 'path': 'phone', 'from': '999-99999', 'ops': 'Deleted', 'label': 'Phone', 'index': null, isArray: false
         })
         expect(history[0].changes[3]).to.be.deep.eql({
-          'to': '', 'path': '__v', 'from': 0, 'ops': 'Deleted', 'label': 'V'
+          'to': '', 'path': '__v', 'from': 0, 'ops': 'Deleted', 'label': 'V', 'index': null, isArray: false
         })
 
         expect(history[0].action).to.be.eq('Removed Document')
@@ -984,16 +984,16 @@ describe('Mongoose-History-Trace', async () => {
         expect(history[0].changes.length).to.be.eq(4)
 
         expect(history[0].changes[0]).to.be.deep.eql({
-          'to': '', 'path': 'name', 'from': 'John Doe', 'ops': 'Deleted', 'label': 'Name'
+          'to': '', 'path': 'name', 'from': 'John Doe', 'ops': 'Deleted', 'label': 'Name', 'index': null, isArray: false
         })
         expect(history[0].changes[1]).to.be.deep.eql({
-          'to': '', 'path': 'email', 'from': 'john@email.com', 'ops': 'Deleted', 'label': 'Email'
+          'to': '', 'path': 'email', 'from': 'john@email.com', 'ops': 'Deleted', 'label': 'Email', 'index': null, isArray: false
         })
         expect(history[0].changes[2]).to.be.deep.eql({
-          'to': '', 'path': 'phone', 'from': '999-99999', 'ops': 'Deleted', 'label': 'Phone'
+          'to': '', 'path': 'phone', 'from': '999-99999', 'ops': 'Deleted', 'label': 'Phone', 'index': null, isArray: false
         })
         expect(history[0].changes[3]).to.be.deep.eql({
-          'to': '', 'path': '__v', 'from': 0, 'ops': 'Deleted', 'label': 'V'
+          'to': '', 'path': '__v', 'from': 0, 'ops': 'Deleted', 'label': 'V', 'index': null, isArray: false
         })
 
         expect(history[0].action).to.be.eq('Removed Document')
@@ -1019,16 +1019,16 @@ describe('Mongoose-History-Trace', async () => {
         expect(history[0].changes.length).to.be.eq(4)
 
         expect(history[0].changes[0]).to.be.deep.eql({
-          'to': '', 'path': 'name', 'from': 'John Doe', 'ops': 'Deleted', 'label': 'Name'
+          'to': '', 'path': 'name', 'from': 'John Doe', 'ops': 'Deleted', 'label': 'Name', 'index': null, isArray: false
         })
         expect(history[0].changes[1]).to.be.deep.eql({
-          'to': '', 'path': 'email', 'from': 'john@email.com', 'ops': 'Deleted', 'label': 'Email'
+          'to': '', 'path': 'email', 'from': 'john@email.com', 'ops': 'Deleted', 'label': 'Email', 'index': null, isArray: false
         })
         expect(history[0].changes[2]).to.be.deep.eql({
-          'to': '', 'path': 'phone', 'from': '999-99999', 'ops': 'Deleted', 'label': 'Phone'
+          'to': '', 'path': 'phone', 'from': '999-99999', 'ops': 'Deleted', 'label': 'Phone', 'index': null, isArray: false
         })
         expect(history[0].changes[3]).to.be.deep.eql({
-          'to': '', 'path': '__v', 'from': 0, 'ops': 'Deleted', 'label': 'V'
+          'to': '', 'path': '__v', 'from': 0, 'ops': 'Deleted', 'label': 'V', 'index': null, isArray: false
         })
 
         expect(history[0].action).to.be.eq('Removed Document')
