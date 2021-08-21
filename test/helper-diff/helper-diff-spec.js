@@ -1,5 +1,7 @@
-const {deepDiff, getDiff, _diffArray, _capitalizedKey, _getLabel, _getCustomLabel, _objectMapped, _changeTransformToView,
-  _getIndexIsArray } = require('../../lib/diffHelper')
+const {
+  deepDiff, getDiff, _diffArray, _capitalizedKey, _getLabel, _getCustomLabel, _objectMapped, _changeTransformToView,
+  _getIndexIsArray
+} = require('../../lib/diffHelper')
 const { Schema } = require('mongoose')
 const { keys } = require('lodash')
 
@@ -285,17 +287,17 @@ describe('class HelperDiff', () => {
       expect(keys(result)).to.be.include('pathFlatten')
     })
   })
-  context.only('method ._diffArray', () => {
+  context('method ._diffArray', () => {
     it('Should without options and change return null', () => {
       const result = _diffArray()
 
       expect(result.length).to.be.eq(0)
     })
-    it('Should change without options return default paths on change', () => {
-      const old = [{_id_: '1125111215' a: 3 }, { a: 2 }]
-      const current = [ {}, { a: 4 }, { a: 2 },]
+    it.only('Should change without options return default paths on change', () => {
+      const old = [{id:1, value: 1 },{id:2, value: 2 }]
+      const current = [{id:1, value: 2 },{id:2, value: 2 }]
       const result = deepDiff(old, current)
-      expect(result).to.deep.eql([1,2, 5])
+      expect(result).to.deep.eql([1, 2, 5])
       // expect(_diffArray(['a', 'b', 'c'], ['c', 'd'])).to.deep.eql(['a', 'b', 'd'])
       // expect(_diffArray([{ a: 1 }, {a: 2}], [{ a: 3 }, {a: 2}])).to.deep.eql(['a', 'b', 'd'])
     })
@@ -468,37 +470,37 @@ describe('class HelperDiff', () => {
   })
   context('method ._getIndexIsArray', () => {
     it('Should call ._getIndexIsArray without path return { index: null, isArray: false }', () => {
-      const result = _getIndexIsArray({ })
+      const result = _getIndexIsArray({})
 
       expect(result).to.be.eql({ index: null, isArray: false })
     })
     it('Should call ._getIndexIsArray with path return { index: null, isArray: false }', () => {
-      const path = [ 'field', 'subfield' ]
+      const path = ['field', 'subfield']
 
-      const result = _getIndexIsArray({ item: {path} })
+      const result = _getIndexIsArray({ item: { path } })
 
       expect(result).to.be.eql({ index: null, isArray: false })
     })
     it('Should call ._getIndexIsArray with path and ops==Array return { index: null, isArray: true }', () => {
-      const path = [ 'field', 'subfield' ]
+      const path = ['field', 'subfield']
 
-      const result = _getIndexIsArray({ item: {path}, ops: 'Array' })
+      const result = _getIndexIsArray({ item: { path }, ops: 'Array' })
 
-      expect(result).to.be.eql({ index: null, isArray: true} )
+      expect(result).to.be.eql({ index: null, isArray: true })
     })
     it('Should call ._getIndexIsArray with path and ops==Array and index==1 return { index: 3, isArray: true }', () => {
-      const path = [ 'field', 3, 'subfield' ]
+      const path = ['field', 3, 'subfield']
 
-      const result = _getIndexIsArray({ item: {path}, ops: 'Array' })
+      const result = _getIndexIsArray({ item: { path }, ops: 'Array' })
 
-      expect(result).to.be.eql({ index: 3, isArray: true} )
+      expect(result).to.be.eql({ index: 3, isArray: true })
     })
     it('Should call ._getIndexIsArray with path and index==1 without ops return { index: 3, isArray: true }', () => {
-      const path = [ 'field', 3, 'subfield' ]
+      const path = ['field', 3, 'subfield']
 
-      const result = _getIndexIsArray({ item: {path} })
+      const result = _getIndexIsArray({ item: { path } })
 
-      expect(result).to.be.eql({ index: 3, isArray: true} )
+      expect(result).to.be.eql({ index: 3, isArray: true })
     })
   })
 })

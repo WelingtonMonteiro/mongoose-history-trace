@@ -44,6 +44,7 @@
   },
   "dependencies": {
     "deep-diff": "1.0.2",
+    "json-deep-diff-list": "^1.1.0",
     "lodash": "4.17.21",
     "mongoose": "5.13.2"
   },
