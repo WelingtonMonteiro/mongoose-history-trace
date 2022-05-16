@@ -1,5 +1,6 @@
 const {
   getDiff,
+  _isObject,
   _capitalizedKey,
   _getLabel,
   _getCustomLabel,
@@ -16,6 +17,24 @@ describe('class HelperDiff', () => {
       const result = getDiff()
 
       expect(result.length).to.be.eq(0)
+    })
+    it('Should edited one field with value of null return diffs', () => {
+      const oneSchema = new Schema({
+        field: { type: Number }
+      })
+
+      const old = { field: null }
+      const current = { field: 0.5 }
+
+      const result = getDiff({ old, current }, oneSchema)
+
+      expect(result[0].to).to.be.eq(0.5)
+      expect(result[0].from).to.be.eq(null)
+      expect(result[0].ops).to.be.eq('Edited')
+      expect(result[0].path).to.be.eq('field')
+      expect(result[0].label).to.be.eq('Field')
+      expect(result[0].isArray).to.be.eq(false)
+      expect(result[0].index).to.be.eq(null)
     })
     it('Should edited one field with _label_ return diffs', () => {
       const oneSchema = new Schema({
@@ -460,37 +479,79 @@ describe('class HelperDiff', () => {
   })
   context('method ._getIndexIsArray', () => {
     it('Should call ._getIndexIsArray without path return { index: null, isArray: false }', () => {
-      const result = _getIndexIsArray({ })
+      const result = _getIndexIsArray({})
 
       expect(result).to.be.eql({ index: null, isArray: false })
     })
     it('Should call ._getIndexIsArray with path return { index: null, isArray: false }', () => {
-      const path = [ 'field', 'subfield' ]
+      const path = ['field', 'subfield']
 
-      const result = _getIndexIsArray({ item: {path} })
+      const result = _getIndexIsArray({ item: { path } })
 
       expect(result).to.be.eql({ index: null, isArray: false })
     })
     it('Should call ._getIndexIsArray with path and ops==Array return { index: null, isArray: true }', () => {
-      const path = [ 'field', 'subfield' ]
+      const path = ['field', 'subfield']
 
-      const result = _getIndexIsArray({ item: {path}, ops: 'Array' })
+      const result = _getIndexIsArray({ item: { path }, ops: 'Array' })
 
-      expect(result).to.be.eql({ index: null, isArray: true} )
+      expect(result).to.be.eql({ index: null, isArray: true })
     })
     it('Should call ._getIndexIsArray with path and ops==Array and index==1 return { index: 3, isArray: true }', () => {
-      const path = [ 'field', 3, 'subfield' ]
+      const path = ['field', 3, 'subfield']
 
-      const result = _getIndexIsArray({ item: {path}, ops: 'Array' })
+      const result = _getIndexIsArray({ item: { path }, ops: 'Array' })
 
-      expect(result).to.be.eql({ index: 3, isArray: true} )
+      expect(result).to.be.eql({ index: 3, isArray: true })
     })
     it('Should call ._getIndexIsArray with path and index==1 without ops return { index: 3, isArray: true }', () => {
-      const path = [ 'field', 3, 'subfield' ]
+      const path = ['field', 3, 'subfield']
 
-      const result = _getIndexIsArray({ item: {path} })
+      const result = _getIndexIsArray({ item: { path } })
 
-      expect(result).to.be.eql({ index: 3, isArray: true} )
+      expect(result).to.be.eql({ index: 3, isArray: true })
+    })
+  })
+  context('method ._isObject', () => {
+    it('Should call ._isObject with value null return false', () => {
+      const result = _isObject(null)
+
+      expect(result).to.be.eql(false)
+    })
+    it('Should call ._isObject with value undefined return false', () => {
+      const result = _isObject(undefined)
+
+      expect(result).to.be.eql(false)
+    })
+    it('Should call ._isObject with value NaN return false', () => {
+      const result = _isObject(NaN)
+
+      expect(result).to.be.eql(false)
+    })
+    it('Should call ._isObject with value "" return false', () => {
+      const result = _isObject('')
+
+      expect(result).to.be.eql(false)
+    })
+    it('Should call ._isObject with value 123 return false', () => {
+      const result = _isObject(123)
+
+      expect(result).to.be.eql(false)
+    })
+    it('Should call ._isObject with value [] return false', () => {
+      const result = _isObject([])
+
+      expect(result).to.be.eql(false)
+    })
+    it('Should call ._isObject with value {} return true', () => {
+      const result = _isObject({})
+
+      expect(result).to.be.eql(true)
+    })
+    it('Should call ._isObject with value {a: 1} return true', () => {
+      const result = _isObject({ a: 1 })
+
+      expect(result).to.be.eql(true)
     })
   })
 })
