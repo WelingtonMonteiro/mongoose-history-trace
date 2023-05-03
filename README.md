@@ -13,44 +13,47 @@
 
 # Mongoose History Trace Plugin
 
+> ATTENTION: From version 2.x, there were significant changes in the plugin's structure in order to contemplate the new versions of mongoose, so read the doc because this is a breakdown version.
+Note: Now you need to explicitly pass the [Mongoose][] connection to the plugin.
+
 > This plugin for [Mongoose][] , aims to save the differences in the changes between the changed objects in the database, saving them in a collection and supporting their auditing.
-  Currently supports all methods of mongoose: update , create, delete and its variations (findByIdAndUpdate, updateMany, updateOne, deleteMany, UpdaOne, FindOneAndUpdate, save, create, delete, update, etc.).
-  
-  [Mongoose][] version suported: `>=v5.2.0` or higher.
+Currently supports all methods of mongoose: update , create, delete and its variations (findByIdAndUpdate, updateMany, updateOne, deleteMany, UpdaOne, FindOneAndUpdate, save, create, delete, update, etc.).
+
+[Mongoose][] version suported: `>=v5.2.0` or higher.
 
 ## Table of Contents
 
 * [Introduction](#introduction)
-* [Installation](#Install)
+* [Installation](#install)
 * [Usage](#usage)
 * [Result Format](#result-format)
 * [Methods](#methods)
-   * [Model.addLoggedUser({ object })](#--addloggeduser-object--required)
-   * [Model.getChangeDiffs(old, current)](#--getchangediffsold-current)
-   * [Model.createHistory({ old, current, loggedUser, method })](#--createhistory-old-current-loggeduser-method-)
+  * [Model.addLoggedUser({ object })](#--addloggeduser-object--required)
+  * [Model.getChangeDiffs(old, current)](#--getchangediffsold-current)
+  * [Model.createHistory({ old, current, loggedUser, method })](#--createhistory-old-current-loggeduser-method-)
 * [Options](#options)
-   * [Custom value for label](#--custom-value-for-label-in-changeslabel)    
-   * [Define custom path name in changes](#--changetransform)
-   * [Indexes](#--indexes)
-   * [Define path user](#--userpaths)
-   * [Save without logged user](#--isauthenticated)
-   * [Define custom collection name](#--customcollectionname)
-   * [Define custom module name](#--modulename)
-   * [Omit paths collection on save](#--omitpaths)
-   * [Save in other connection](#--connectionuri)
-   * [Add new fields on logs](#--addcollectionpaths)
+  * [Custom value for label](#--custom-value-for-label-in-changeslabel)
+  * [Define custom path name in changes](#--changetransform)
+  * [Indexes](#--indexes)
+  * [Define path user](#--userpaths)
+  * [Save without logged user](#--isauthenticated)
+  * [Define custom collection name](#--customcollectionname)
+  * [Define custom module name](#--modulename)
+  * [Omit paths collection on save](#--omitpaths)
+  * ~~[Save in other connection](#--connectionuri) (depreciated on version 2.x)~~
+  * ~~[Add new fields on logs](#--addcollectionpaths) (depreciated on version 2.x)~~
 * [Credits](#credits)
 * [Tests](#tests)
 * [Contributing](#contributing)
 * [License](#license)
- 
+
 ## Introduction
 
 > This mongoose plugin allows you to save changes in the models. It provides two kind of save history logs:
 
 * It also registers the activity in the `historyLogs` collection name by default.
 
- [Back to Table Contents](#table-of-contents)
+[Back to Table Contents](#table-of-contents)
 
 ## Install
 
@@ -68,7 +71,7 @@ yarn add mongoose-history-trace
 
 Or add it to your package.json
 
- [Back to Table Contents](#table-of-contents)
+[Back to Table Contents](#table-of-contents)
 
 ## Usage
 
@@ -78,6 +81,7 @@ Or add it to your package.json
 const mongoose = require('mongoose')
 const mongooseHistoryTrace = require('mongoose-history-trace')
 const Schema  = mongoose.Schema
+const options = { mongooseConnection: conn } // <-- is required to pass the mongoose connection
 
 const User = new Schema({
     name: String, 
@@ -93,22 +97,17 @@ Or define plugin in global context mongoose for all schemas. Example:
 
 ```javascript
 const mongooseHistoryTrace = require('mongoose-history-trace')
+const options = { mongooseConnection: conn } // <-- is required to pass the mongoose connection
 
 
 mongoose.plugin(mongooseHistoryTrace, options)
 ```
-The plugin will create a new collection with name `historyTrace` by default. 
+The plugin will create a new collection with name `historyTrace` by default.
 
-You can also change the name of the collection by setting the configuration customCollectionName:
-
-```javascript
-const mongooseHistoryTrace = require('mongoose-history-trace')
+You can also change the name of the collection by setting the configuration [customCollectionName](#--customcollectionname)
 
 
-mongoose.plugin(mongooseHistoryTrace, options)
-```
-
- [Back to Table Contents](#table-of-contents)
+[Back to Table Contents](#table-of-contents)
 
 ## Result Format
 
@@ -137,14 +136,14 @@ mongoose.plugin(mongooseHistoryTrace, options)
     "method": String           //name of method call: "updated" | "created" | "deleted"
 }
 ```
- [Back to Table Contents](#table-of-contents)
+[Back to Table Contents](#table-of-contents)
 
 
 ## Methods
 #### - addLoggedUser({ object }) [required]
 > You can define logged user in request.
-Initialize the plugin using the `addLoggedUser()` method, before call method mongoose. 
-Example: 
+Initialize the plugin using the `addLoggedUser()` method, before call method mongoose.
+Example:
 
 ```javascript
 async function update (req, res) {
@@ -159,11 +158,11 @@ async function update (req, res) {
 }
 ```
 
- [Back to Table Contents](#table-of-contents)
+[Back to Table Contents](#table-of-contents)
 
 #### - getChangeDiffs(old, current)
 > Returns list of differences between old and current objects.
- Call `getChangeDiffs(old, current)` method mongoose to return list of diffs. Example:
+Call `getChangeDiffs(old, current)` method mongoose to return list of diffs. Example:
 
 ```javascript
 {
@@ -177,7 +176,7 @@ async function update (req, res) {
     **/
 }
 ```
- [Back to Table Contents](#table-of-contents)
+[Back to Table Contents](#table-of-contents)
 
 
 #### - createHistory({ old, current, loggedUser, method })
@@ -205,13 +204,13 @@ async function update (req, res) {
 **Obs.:** You can create log history without path logged user, pass in options plugin `{isAuthenticated: false}` [Save without logged user](#--isAuthenticated)
 
 
- [Back to Table Contents](#table-of-contents)
+[Back to Table Contents](#table-of-contents)
 
 ## Options
 
 #### - Custom value for label in `changes.label`
 > By default, the label name is the same as the capitalized schema field name.
-It is possible to define a custom name, for that it is enough in the schema 
+It is possible to define a custom name, for that it is enough in the schema
 to pass the private field `_label_` and custom value `"new label"`. Example:
 
 ```javascript
@@ -223,7 +222,7 @@ const User = new Schema({
 })
 
 ```
-Thus, instead of saving the capitalized name of the schema field, 
+Thus, instead of saving the capitalized name of the schema field,
 save the name passed in the private field `_label_`. Example result:
 
 ```javascript
@@ -246,7 +245,7 @@ save the name passed in the private field `_label_`. Example result:
 
 ```
 
- [Back to Table Contents](#table-of-contents)
+[Back to Table Contents](#table-of-contents)
 
 #### - changeTransform
 > Define custom paths name in `changes`.
@@ -272,7 +271,7 @@ It is possible to change all fields in changes.
 
 If the value of a field is empty, or is not passed, the default field is maintained.
 
- [Back to Table Contents](#table-of-contents)
+[Back to Table Contents](#table-of-contents)
 
 #### - indexes
 > You can define indexes in collection, for example:
@@ -283,7 +282,7 @@ const options = {indexes: [{'documentNumber': -1, 'changes.path': 1}]}
 User.plugin(mongooseHistory, options)
 ```
 
- [Back to Table Contents](#table-of-contents)
+[Back to Table Contents](#table-of-contents)
 
 #### - userPaths
 > Required if saved logged user.
@@ -295,23 +294,23 @@ const options = {userPaths: ['name', 'email', 'address.city']}
 
 User.plugin(mongooseHistory, options)
 ```
- [Back to Table Contents](#table-of-contents)
+[Back to Table Contents](#table-of-contents)
 
 #### - isAuthenticated
-> Path 'user' in log history is required, but you can saved logs without path loggedUser. Example:
-Value default is `TRUE`
+> Path 'user' in log history don't is required, but you can saved logs without path loggedUser. Example:
+Value default is `FALSE`
 
 ```javascript
 const options = {isAuthenticated: false}
 
 User.plugin(mongooseHistory, options)
 ```
-So it is not necessary to pass the user logged into the `Model.addLoggedUser()` method. 
+So it is not necessary to pass the user logged into the `Model.addLoggedUser()` method.
 The resulting log will not contain the "user" field.
 
     "user": { Mixed }  // REMOVED
 
- [Back to Table Contents](#table-of-contents)
+[Back to Table Contents](#table-of-contents)
 
 
 #### - customCollectionName
@@ -324,7 +323,7 @@ const options = {customCollectionName: 'logs'}
 User.plugin(mongooseHistory, options)
 ```
 
- [Back to Table Contents](#table-of-contents)
+[Back to Table Contents](#table-of-contents)
 
 #### - moduleName
 > You can define moduleName path saved in history trace logs.
@@ -336,7 +335,7 @@ const options = { moduleName: 'login-user' }
 User.plugin(mongooseHistory, options)
 ```
 
- [Back to Table Contents](#table-of-contents)
+[Back to Table Contents](#table-of-contents)
 
 
 #### - omitPaths
@@ -349,42 +348,7 @@ const options = { omitPaths:['name', 'email', 'ip'] }
 User.plugin(mongooseHistory, options)
 ```
 
- [Back to Table Contents](#table-of-contents)
-
-#### - connectionUri
-> You can save `history trace logs` collection in another url database.
-By default, the collection is saved to the connection project itself, example:
-
-```javascript
-const options = { connectionUri: 'mongodb://localhost/other_db' }
-
-User.plugin(mongooseHistory, options)
-```
-
- [Back to Table Contents](#table-of-contents)
-
-#### - addCollectionPaths
-> You can add new paths in collection history trace logs, example:
-
-```javascript
-const options = { addCollectionPaths:[
-        {key: 'field1', value: 'String'},
-        {key: 'field2', value: 'Date', defaultValue: ''},
-        {key: 'field1.subField', value: 'String'},         
-] }
-
-User.plugin(mongooseHistory, options)
-```
-**key** - name path
-
-**value** - [optional] mongoose types. Example:(`'ObjectId'`, `'Mixed'`, `'String'`, `'Number'`, etc).
-default value is mongoose types `'Mixed'`.
-
-**defaultValue** - [optional] define the default value of path
-
-_**Obs.:**_ It is not possible to add new fields in the `changes` field. New fields will be added to the collection body.
-
- [Back to Table Contents](#table-of-contents)
+[Back to Table Contents](#table-of-contents)
 
 
 ## Credits
@@ -394,13 +358,13 @@ This work was inspired by:
 * https://www.npmjs.com/package/mongoose-history
 * https://github.com/drudge/mongoose-audit
 
- 
- [Back to Table Contents](#table-of-contents)
+
+[Back to Table Contents](#table-of-contents)
 
 ## Tests
 Run test with command: `npm test`
 
- [Back to Table Contents](#table-of-contents)
+[Back to Table Contents](#table-of-contents)
 
 ## Contributing
 
@@ -432,7 +396,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
- [Back to Table Contents](#table-of-contents)
+[Back to Table Contents](#table-of-contents)
 
 
 ## 

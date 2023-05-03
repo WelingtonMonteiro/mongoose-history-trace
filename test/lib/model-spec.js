@@ -1,10 +1,11 @@
-'use strict'
-const { HistoryLogModel } = require('../../lib/model')
-const { keys, set, get } = require('lodash')
 const mongoose = require('mongoose')
-mongoose.Promise = global.Promise
+const { HistoryLogModel } = require('../../lib/model')
+const { set, keys, merge } = require('lodash')
 
-describe('class HistoryModel', () => {
+describe('Mongoose-History-Trace::model', async () => {
+  const dbOptions = getOptionsVersionInstance(mongoose)
+  let mongooseConnection, Model, HistoryModel = null
+  let clientMongoose
   const defaultSchema = {
     'documentNumber': { 'required': true },
     'action': { 'required': true },
@@ -15,9 +16,24 @@ describe('class HistoryModel', () => {
     'changes': { 'type': [], 'required': true }
   }
 
+  beforeEach(async () => {
+    clientMongoose = new mongoose.Mongoose()
+    mongooseConnection = await clientMongoose.connect('mongodb://localhost:27017/test', dbOptions)
+  })
+  afterEach(async () => {
+    // await removeAllData({ Model, HistoryModel })
+    mongooseConnection = null
+    clientMongoose = null
+  })
+
   context('Initialize default model', () => {
+    it('Should initialize Model without connection, not return model', test(async () => {
+      HistoryModel = await HistoryLogModel()
+
+      expect(HistoryModel).to.be.eq(undefined)
+    }))
     it('Should initialize Model without options return model default model configuration', test(async () => {
-      const HistoryModel = await getHistoryModel()
+      HistoryModel = await HistoryLogModel(mongooseConnection)
 
       expect(HistoryModel.modelName).to.be.eq('historyLogs')
       expect(HistoryModel.collection.name).to.be.eq('historyLogs')
@@ -35,7 +51,7 @@ describe('class HistoryModel', () => {
       const options = {
         indexes: [{ 'changes.label': 1 }]
       }
-      const HistoryModel = await getHistoryModel(options)
+      const HistoryModel = await HistoryLogModel(mongooseConnection, options)
 
       expect(HistoryModel.modelName).to.be.eq('historyLogs')
       expect(HistoryModel.collection.name).to.be.eq('historyLogs')
@@ -53,7 +69,7 @@ describe('class HistoryModel', () => {
         addCollectionPaths: [{ key: 'otherFields', value: 'String' }]
       }
 
-      const HistoryModel = await getHistoryModel(options)
+      const HistoryModel = await HistoryLogModel(mongooseConnection, options)
       const addFieldSchema = JSON.parse(JSON.stringify(defaultSchema))
 
       set(addFieldSchema, 'otherFields', 'String')
@@ -73,7 +89,7 @@ describe('class HistoryModel', () => {
         addCollectionPaths: [{ key: 'otherFields', value: 'String', defaultValue: '' }],
         // customCollectionName: 'name3'
       }
-      const HistoryModel = await getHistoryModel(options)
+      const HistoryModel = await HistoryLogModel(mongooseConnection, options)
       const addFieldSchema = JSON.parse(JSON.stringify(defaultSchema))
 
       set(addFieldSchema, 'otherFields', 'String')
@@ -93,7 +109,7 @@ describe('class HistoryModel', () => {
         addCollectionPaths: [{ key: 'otherFields' }],
       }
 
-      const HistoryModel = await getHistoryModel(options)
+      const HistoryModel = await HistoryLogModel(mongooseConnection, options)
       const addFieldSchema = JSON.parse(JSON.stringify(defaultSchema))
 
       set(addFieldSchema, 'otherFields', 'String')
@@ -109,11 +125,10 @@ describe('class HistoryModel', () => {
       expect(HistoryModel.schema._indexes[2][0]).to.be.deep.eql({ documentNumber: 1 })
     }))
     it('Should initialize Model without options.connectionUri', test(async () => {
-      const options = {
-        connectionUri: 'mongodb://localhost/other_database',
-      }
+      clientMongoose = new mongoose.Mongoose()
+      mongooseConnection = await clientMongoose.connect('mongodb://localhost:27017/other_database', dbOptions)
 
-      const HistoryModel = await getHistoryModel(options)
+      const HistoryModel = await HistoryLogModel(mongooseConnection)
 
       expect(HistoryModel.modelName).to.be.eq('historyLogs')
       expect(HistoryModel.collection.name).to.be.eq('historyLogs')
@@ -128,38 +143,30 @@ describe('class HistoryModel', () => {
       expect(HistoryModel.db.name).to.be.eq('other_database')
     }))
   })
-})
 
-async function getHistoryModel (options) {
-  await deleteModel('historyLogs')
-  return HistoryLogModel(options)
-}
+  async function removeAllData ({ Model, HistoryModel }) {
+    if (Model) await Model.deleteMany()
+    if (HistoryModel) await HistoryModel.deleteMany()
+  }
 
-async function deleteModel (name) {
-  if (typeof name === 'string') {
-    const model = mongoose.models[name]
-    if (model == null) return
-    const collectionName = get(model, 'collection.name')
-    if (!collectionName) return
-    if (mongoose.models) delete mongoose.models[`${name}`]
-    if (mongoose.collections) delete mongoose.collections[`${collectionName}`]
-    if (mongoose.modelSchemas) delete mongoose.modelSchemas[`${name}`]
-    if (mongoose.connections.length) {
-      mongoose.connections.map(item => {
-        if (item.models) delete item.models[`${name}`]
-        if (item.base && item.base.modelSchemas) delete item.base.modelSchemas[`${name}`]
-        if (item.collections) delete item.collections[`${collectionName}`]
+  function getOptionsVersionInstance (mongooseInstance) {
+    const version = parseInt(mongooseInstance.version)
+    if (version < 5) {
+      return merge({}, { useMongoClient: true })
+    }
+    if (version > 5 && version < 6 ) {
+      return merge({}, {
+        useUnifiedTopology: true,
+        useNewUrlParser: true,
+        useFindAndModify: false,
+        autoIndex: true,
+        useCreateIndex: true
       })
     }
-  }
-  if (name instanceof RegExp) {
-    const pattern = name
-    const names = mongoose.modelNames()
-    for (const name of names) {
-      if (pattern.test(name)) {
-        await deleteModel(name)
-      }
-    }
-  }
-}
 
+    return merge({}, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true
+    })
+  }
+})
